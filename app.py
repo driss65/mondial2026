@@ -21,18 +21,33 @@ GROUPES_2026 = {
     "Groupe L": ["Angleterre", "Croatie", "Ghana", "Panama"]
 }
 
+from streamlit_gsheets import GSheetsConnection
+
 def sauvegarder_prediction(donnees):
-    fichier = "predictions.csv"
-    df_nouveau = pd.DataFrame([donnees])
-    if os.path.exists(fichier):
-        df_existant = pd.read_csv(fichier)
+    # Remplacez le lien ci-dessous par le lien de VOTRE Google Sheet partagé
+    url_sheet = "https://docs.google.com/spreadsheets/d/1leoaV-WZUxEMLweALJ3hm6X_fQMIHT3a7XuroFmVn8M/edit?usp=sharing"
+    
+    try:
+        # Connexion au Google Sheet
+        conn = st.connection("gsheets", type=GSheetsConnection)
+        
+        # Lire les données existantes
+        df_existant = conn.read(spreadsheet=url_sheet, ttl=0)
+        
+        # Vérifier si le pseudo existe déjà
         if donnees["Pseudo"] in df_existant["Pseudo"].values:
             return False
+            
+        # Ajouter la nouvelle ligne
+        df_nouveau = pd.DataFrame([donnees])
         df_final = pd.concat([df_existant, df_nouveau], ignore_index=True)
-    else:
-        df_final = df_nouveau
-    df_final.to_csv(fichier, index=False)
-    return True
+        
+        # Mettre à jour le Google Sheet
+        conn.update(spreadsheet=url_sheet, data=df_final)
+        return True
+    except Exception as e:
+        st.error(f"Erreur de connexion au tableur : {e}")
+        return False
 
 st.title("🏆 Pronostiques Mondial 2026 — Version Officielle Intégrale")
 st.write("Bonne chance!!.")
