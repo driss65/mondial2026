@@ -34,8 +34,8 @@ def sauvegarder_prediction(donnees):
     df_final.to_csv(fichier, index=False)
     return True
 
-st.title("🏆 Simulateur Mondial 2026 — Version Officielle Intégrale")
-st.write("L'arbre des matchs respecte scrupuleusement la chronologie et les affiches de vos captures d'écran.")
+st.title("🏆 Pronostiques Mondial 2026 — Version Officielle Intégrale")
+st.write("Bonne chance!!.")
 
 pseudo = st.text_input("👤 Entrez votre nom ou pseudo :", key="username").strip()
 
