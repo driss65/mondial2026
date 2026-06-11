@@ -209,7 +209,7 @@ if pseudo:
         st.markdown(f"### 🏆 Votre Champion du Monde 2026 : **{champion}**")
         st.divider()
 
-        # 8️⃣ ENREGISTREMENT
+       # 8️⃣ ENREGISTREMENT
         st.header("8️⃣ Enregistrer mes pronostics")
         if st.button("🚀 VALIDER MA GRILLE"):
             prediction_joueur = {
@@ -221,10 +221,37 @@ if pseudo:
             }
             if sauvegarder_prediction(prediction_joueur):
                 st.balloons()
-                st.success("🎉 Parfait ! L'intégralité du tableau est validée ,Bonne chance !!")
+                st.success("🎉 Parfait ! L'intégralité du tableau est validée  !")
             else:
                 st.error("❌ Ce pseudo existe déjà.")
+
     else:
         st.warning("⚠️ Veuillez cocher exactement 8 équipes troisièmes pour générer la grille de phase finale.")
 else:
     st.info("Veuillez saisir votre pseudo en haut de l'écran pour débloquer l'application.")
+
+# --- 🔓 ESPACE ADMINISTRATEUR SÉCURISÉ (TOUT EN BAS DU FICHIER) ---
+st.divider()
+with st.expander("🛠️ Espace Organisateur (Accès réservé)"):
+    password = st.text_input("Entrez le mot de passe pour voir les résultats :", type="password")
+    
+    # Tu peux changer "mon_code_secret_2026" par le mot de passe de ton choix
+    if password == "drissmontreal2026@":
+        st.subheader("📊 Liste de toutes les prédictions enregistrées")
+        
+        if os.path.exists("predictions.csv"):
+            df_global = pd.read_csv("predictions.csv")
+            
+            # Affiche le tableau directement à l'écran
+            st.dataframe(df_global)
+            
+            # Bouton magique pour télécharger le fichier Excel/CSV d'un coup
+            csv = df_global.to_csv(index=False).encode('utf-8')
+            st.download_button(
+                label="📥 Télécharger le fichier des scores (CSV)",
+                data=csv,
+                file_name="resultats_mondial_2026.csv",
+                mime="text/csv"
+            )
+        else:
+            st.info("Aucun pronostic n'a encore été enregistré.")
