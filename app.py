@@ -230,7 +230,7 @@ if pseudo:
             }
             if sauvegarder_prediction(prediction_joueur):
                 st.balloons()
-                st.success("🎉 Parfait ! L'intégralité du tableau est validée sans aucune erreur de croisement !")
+                st.success("🎉 Parfait ! L'intégralité du pronostique est validée  !")
             else:
                 st.error("❌ Ce pseudo existe déjà.")
 
@@ -263,4 +263,4 @@ with st.expander("🛠️ Espace Organisateur (Accès réservé)"):
                 mime="text/csv"
             )
         else:
-            st.info("Aucun pronostic n'a encore été enregistré.")
+            st.info("Aucun pronostique n'a encore été enregistré.")
