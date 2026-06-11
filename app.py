@@ -221,7 +221,7 @@ if pseudo:
             }
             if sauvegarder_prediction(prediction_joueur):
                 st.balloons()
-                st.success("🎉 Parfait ! L'intégralité du tableau est validée sans aucune erreur de croisement !")
+                st.success("🎉 Parfait ! L'intégralité du tableau est validée ,Bonne chance !!")
             else:
                 st.error("❌ Ce pseudo existe déjà.")
     else:
