@@ -23,34 +23,28 @@ GROUPES_2026 = {
 
 from streamlit_gsheets import GSheetsConnection
 
+import requests
+import json
+
 def sauvegarder_prediction(donnees):
-    # Remplacez le lien ci-dessous par le lien de VOTRE Google Sheet partagé
-    url_sheet = "https://docs.google.com/spreadsheets/d/1leoaV-WZUxEMLweALJ3hm6X_fQMIHT3a7XuroFmVn8M/edit?usp=sharing"
+    # ⚠️ REMPLACE CETTE URL PAR CELLE QUE TU AS COPIÉE À L'ÉTAPE 2
+    URL_WEB_APP = "https://script.google.com/macros/s/AKfycbwMERh5VFJj52jzNhr_CQ6MdMyU8YLzndGtRwAHN_D4KwX8h6xIbKnqwWG_ry64pgPK/exec"
     
     try:
-        # Connexion au Google Sheet
-        conn = st.connection("gsheets", type=GSheetsConnection)
+        # On envoie les données au format JSON vers ton Google Script
+        reponse = requests.post(URL_WEB_APP, data=json.dumps(donnees))
         
-        # Lire les données existantes
-        df_existant = conn.read(spreadsheet=url_sheet, ttl=0)
-        
-        # Vérifier si le pseudo existe déjà
-        if donnees["Pseudo"] in df_existant["Pseudo"].values:
-            return False
-            
-        # Ajouter la nouvelle ligne
-        df_nouveau = pd.DataFrame([donnees])
-        df_final = pd.concat([df_existant, df_nouveau], ignore_index=True)
-        
-        # Mettre à jour le Google Sheet
-        conn.update(spreadsheet=url_sheet, data=df_final)
-        return True
+        if reponse.status_code == 200:
+            resultat = reponse.json()
+            if resultat.get("status") == "success":
+                return True
+        return False
     except Exception as e:
-        st.error(f"Erreur de connexion au tableur : {e}")
+        st.error(f"Erreur lors de l'envoi des données : {e}")
         return False
 
 st.title("🏆 Pronostiques Mondial 2026 — Version Officielle Intégrale")
-st.write("Bonne chance!!.")
+st.write("Bonne chance!.")
 
 pseudo = st.text_input("👤 Entrez votre nom ou pseudo :", key="username").strip()
 
@@ -236,7 +230,7 @@ if pseudo:
             }
             if sauvegarder_prediction(prediction_joueur):
                 st.balloons()
-                st.success("🎉 Parfait ! L'intégralité du tableau est validée  !")
+                st.success("🎉 Parfait ! L'intégralité du tableau est validée sans aucune erreur de croisement !")
             else:
                 st.error("❌ Ce pseudo existe déjà.")
 
@@ -251,7 +245,7 @@ with st.expander("🛠️ Espace Organisateur (Accès réservé)"):
     password = st.text_input("Entrez le mot de passe pour voir les résultats :", type="password")
     
     # Tu peux changer "mon_code_secret_2026" par le mot de passe de ton choix
-    if password == "drissmontreal2026@":
+    if password == "mon_code_secret_2026":
         st.subheader("📊 Liste de toutes les prédictions enregistrées")
         
         if os.path.exists("predictions.csv"):
